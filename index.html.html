@@ -1,0 +1,1653 @@
+<!doctype html>
+<html lang="en">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Eventora Events - Premium Event Management</title>
+  <script src="/_sdk/data_sdk.js"></script>
+  <script src="/_sdk/element_sdk.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: #f7f4f0;
+      color: #fbfbfb;
+      line-height: 1.6;
+      overflow: visible;
+      box-sizing: border-box;
+    }
+
+    html, body {
+      height: 100%;
+    }
+
+    /* Navigation */
+    nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      background: rgba(54, 8, 8, 0.95);
+      backdrop-filter: blur(10px);
+      padding: 1.2rem 5%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      z-index: 1000;
+      box-shadow: 0 2px 20px rgba(65, 7, 7, 0.567);
+    }
+
+    .logo {
+      font-size: 1.6rem;
+      font-weight: 700;
+      background: linear-gradient(135deg, #f1e77a 0%, #db7257 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 2.5rem;
+      list-style: none;
+    }
+
+    .nav-links a {
+      text-decoration: none;
+      color: #f6f5f5;
+      font-weight: 500;
+      font-size: 0.95rem;
+      transition: color 0.3s;
+      cursor: pointer;
+    }
+
+    .nav-links a:hover {
+      color: #e09f6c;
+    }
+
+    .mobile-menu {
+      display: none;
+      flex-direction: column;
+      gap: 0.4rem;
+      cursor: pointer;
+      background-color:#320808;
+    }
+
+    .mobile-menu span {
+      width: 25px;
+      height: 2px;
+      background: #f9f8f8;
+      transition: 0.3s;
+    }
+
+    /* Hero Section */
+    .hero {
+      min-height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(135deg, #a83030 0%, #3a0505 100%);
+      position: relative;
+    }
+
+    @keyframes slide {
+       0%   { background-image: url('pexels-marina-ribeiro-decoracoes-1081262752-20609919.jpg'); }
+       33%  { background-image: url('pexels-sandesh-pandey-549214633-16681482.jpg'); }
+       66%  { background-image: url('pexels-thevisionaryvows-33417234.jpg'); }
+       100% { background-image: url('44a488a5d5bf88b97b7a7d316abc57a9.jpg'); }
+      }
+    
+
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: url('data:image/svg+xml,<svg width="100" height="100" xmlns="http://www.w3.org/2000/svg"><circle cx="50" cy="50" r="1" fill="white" opacity="0.1"/></svg>');
+      opacity: 0.3;
+    }
+
+    .hero-content {
+      text-align: center;
+      color: white;
+      max-width: 900px;
+      z-index: 1;
+      animation: fadeInUp 1s ease;
+    }
+
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .hero h1 {
+      font-size: 4rem;
+      font-weight: 800;
+      margin-bottom: 1.5rem;
+      line-height: 1.1;
+    }
+
+    .hero p {
+      font-size: 1.5rem;
+      margin-bottom: 3rem;
+      opacity: 0.95;
+      font-weight: 300;
+    }
+
+    .cta-button {
+      display: inline-block;
+      padding: 1rem 3rem;
+      background: rgb(254, 218, 186);
+      color: #761b0f;
+      text-decoration:double;
+      font-family: 'Lora', sans-serif;
+      border-radius: 50px;
+      font-weight: 600;
+      font-size: 1.1rem;
+      transition: all 0.3s;
+      box-shadow: 0 10px 30px rgb(134, 92, 14);
+      border: none;
+      cursor: pointer;
+    }
+
+    .cta-button:hover { 
+      transform: translateY(-3px);
+      box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
+    }
+
+    /* Section Styles */
+    section {
+      padding: 6rem 5%;
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+
+    .section-title {
+      text-align: center;
+      font-size: 2.8rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
+      color: #1a1a1a;
+    }
+
+    .section-subtitle {
+      text-align: center;
+      font-size: 1.2rem;
+      color: #718096;
+      margin-bottom: 4rem;
+      max-width: 700px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    /* About Section */
+    .about-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 3rem;
+      margin-top: 3rem;
+    }
+
+    .about-card {
+      background: white;
+      padding: 2.5rem;
+      border-radius: 20px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+      transition: transform 0.3s, box-shadow 0.3s;
+    }
+
+    .about-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+    }
+
+    .about-card h3 {
+      font-size: 1.5rem;
+      margin-bottom: 1rem;
+      color: #461010;
+      font-weight: bold;
+    }
+
+    .about-card p {
+      color: #4a5568;
+      line-height: 1.8;
+      font-style:italic;
+    }
+
+    /* Services Section */
+    #services {
+      background: #541313;
+    }
+
+    .services-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 2.5rem;
+    }
+
+    .service-card {
+      background: rgb(248, 246, 180);
+      padding: 2.5rem;
+      border-radius: 20px;
+      text-align: center;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+      transition: all 0.3s;
+      position: relative;
+      overflow: visible;
+    }
+
+    .service-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 5px;
+      background: linear-gradient(135deg, #fefe00 0%, #e1b507 100%);
+      transform: scaleX(0);
+      transition: transform 0.3s;
+    }
+
+    .service-card:hover::before {
+      transform: scaleX(1);
+    }
+
+    .service-card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+    }
+
+    .service-icon {
+      font-size: 3rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .service-card h3 {
+      font-size: 1.4rem;
+      margin-bottom: 1rem;
+      color: #2d3748;
+    }
+
+    .service-card p {
+      color: #718096;
+      line-height: 1.7;
+    }
+
+    /* Packages Section */
+    .filter-container {
+      background: rgb(239, 223, 182);
+      padding: 2rem;
+      border-radius: 20px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+      margin-bottom: 3rem;
+    }
+
+    .filter-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1.5rem;
+    }
+    
+
+    .filter-group {
+      display: flex;
+      flex-direction: column;
+      input::placeholder {
+        font-size: 0.9rem;
+        color: #f7f9fb;
+      }
+    }
+
+    .filter-group label {
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+      color: #2d3748;
+      font-size: 0.95rem;
+    }
+
+    .filter-group select,
+    .filter-group input {
+      padding: 0.8rem;
+      border: 2px solid #451c0b;
+      border-radius: 10px;
+      font-size: 0.95rem;
+      transition: border-color 0.3s;
+      background: rgba(79, 42, 39, 0.548);
+    }
+
+    .filter-group select:focus,
+    .filter-group input:focus {
+      outline: none;
+      border-color: #480606;
+    }
+
+    .filter-actions {
+      display: flex;
+      gap: 1rem;
+      margin-top: 1.5rem;
+    }
+
+    .btn {
+      padding: 0.8rem 2rem;
+      border: none;
+      border-radius: 10px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s;
+      font-size: 0.95rem;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #cdb279 0%, #6a4022 100%);
+      color: rgb(45, 10, 10);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 5px 20px rgba(234, 172, 102, 0.4);
+    }
+
+    .btn-secondary {
+      background: #6f3e3e77;
+      color: #ebe8e8;
+    }
+
+    .btn-secondary:hover {
+      background: #501f1f;
+    }
+
+    .packages-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+      gap: 2.5rem;
+    }
+
+    .package-card {
+      background: rgba(182, 154, 83, 0.563);
+      border-radius: 20px;
+      overflow: visible;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+      transition: all 0.3s;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .package-card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+    }
+
+    .package-header {
+      background: rgba(110, 84, 55, 0.86);
+      color: white;
+      padding: 2rem;
+    }
+
+    .package-header h3 {
+      font-size: 1.6rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .package-location {
+      opacity: 0.9;
+      font-size: 0.95rem;
+    }
+
+    .package-body {
+      padding: 2rem;
+      flex-grow: 1;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .package-meta {
+      display: flex;
+      gap: 1.5rem;
+      margin-bottom: 1.5rem;
+      flex-wrap: wrap;
+    }
+
+    .meta-item {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.9rem;
+      color: #fefeff;
+      font-weight: bold;
+    }
+
+    .package-price {
+      font-size: 2rem;
+      font-weight: 700;
+      color: #3a0b0a;
+      margin-bottom: 1rem;
+    }
+
+    .package-description {
+      color: #422c0b;
+      margin-bottom: 1.5rem;
+      line-height: 1.7;
+      flex-grow: 1;
+    }
+
+    .package-highlights {
+      margin-bottom: 1.5rem;
+    }
+
+    .package-highlights h4 {
+      font-size: 1rem;
+      margin-bottom: 0.8rem;
+      color: #654646;
+      font-weight: bold;
+      font-family:Georgia, 'Times New Roman', Times, serif
+    }
+
+    .highlight-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .highlight-list li {
+      color:#422c0b;
+      font-size: 0.9rem;
+      padding-left: 1.5rem;
+      position: relative;
+    }
+
+    .highlight-list li::before {
+      content: '✓';
+      position: absolute;
+      left: 0;
+      color: #942e2e;
+      font-weight: 700;
+    }
+
+    .btn-book {
+      width: 100%;
+      padding: 1rem;
+      background:  linear-gradient(135deg, #52472f 0%, #6a4022 100%);
+      color: rgb(253, 253, 253);
+      border: none;
+      border-radius: 10px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s;
+      font-size: 1rem;
+    }
+
+    .btn-book:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 5px 20px rgba(82, 6, 6, 0.981);
+    }
+
+    /* Booking Section */
+    #booking {
+      background: linear-gradient(to bottom, #5c0e0e, #edf2f7);
+    }
+
+    .booking-form {
+      max-width: 800px;
+      margin: 0 auto;
+      background: rgb(255, 255, 255);
+      padding: 3rem;
+      border-radius: 20px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1.5rem;
+      margin-bottom: 1.5rem;
+      font-family:'Times New Roman', Times, serif;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .form-group.full-width {
+      grid-column: 1 / -1;
+    }
+
+    .form-group label {
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+      color: #2d3748;
+      font-size: 0.95rem;
+    }
+
+    .form-group input,
+    .form-group textarea {
+      padding: 0.9rem;
+      border: 2px solid #6b1616;
+      border-radius: 10px;
+      font-size: 0.95rem;
+      transition: border-color 0.3s;
+      font-family: inherit;
+      color:#330303;
+      input::placeholder {
+        font-size: 0.9rem;
+        color: #320808;
+      }
+    }
+
+    .form-group input:focus,
+    .form-group textarea:focus {
+      outline: none;
+      border-color: #582f17;
+      color:#3a0b0a;
+      font-weight:bold;
+      font-family:'Times New Roman', Times, serif;
+    }
+
+    .form-group textarea {
+      resize: vertical;
+      min-height: 120px;
+    }
+
+    .form-submit {
+      width: 100%;
+      padding: 1.2rem;
+      background: linear-gradient(135deg, #52472f 0%, #6a4022 100%);
+      color: white;
+      border: none;
+      border-radius: 10px;
+      font-weight: 600;
+      font-size: 1.1rem;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    .form-submit:hover:not(:disabled) {
+      transform: translateY(-2px);
+      box-shadow: 0 5px 20px rgba(70, 5, 5, 0.4);
+    }
+
+    .form-submit:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+
+    .success-message {
+      background: #c6f6d5;
+      color: #76404a;
+      padding: 1rem;
+      border-radius: 10px;
+      margin-bottom: 1.5rem;
+      text-align: center;
+      font-weight: 600;
+    }
+
+    /* Contact Section */
+    .contact-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 2.5rem;
+    }
+
+    /* Modal Popup Styles */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.6);
+      z-index: 2000;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .modal-overlay.show {
+      display: flex;
+    }
+
+    .modal-content {
+      background: white;
+      padding: 2.5rem;
+      border-radius: 15px;
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+      max-width: 500px;
+      text-align: center;
+      animation: modalSlideIn 0.3s ease-out;
+    }
+
+    @keyframes modalSlideIn {
+      from {
+        transform: scale(0.9);
+        opacity: 0;
+      }
+      to {
+        transform: scale(1);
+        opacity: 1;
+      }
+    }
+
+    .modal-content.success {
+      border-top: 5px solid #48bb78;
+    }
+
+    .modal-content.error {
+      border-top: 5px solid #f56565;
+    }
+
+    .modal-icon {
+      font-size: 3rem;
+      margin-bottom: 1rem;
+    }
+
+    .modal-title {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: #2d3748;
+      margin-bottom: 0.5rem;
+    }
+
+    .modal-message {
+      color: #718096;
+      line-height: 1.6;
+      margin-bottom: 1.5rem;
+    }
+
+    .modal-button {
+      background: linear-gradient(135deg, #52472f 0%, #6a4022 100%);
+      color: white;
+      border: none;
+      padding: 0.8rem 2rem;
+      border-radius: 8px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    .modal-button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(82, 70, 47, 0.3);
+    }
+
+    .contact-card {
+      background: rgb(248, 244, 242);
+      padding: 2.5rem;
+      border-radius: 20px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+      text-align: center;
+    }
+
+    .contact-icon {
+      font-size: 2.5rem;
+      margin-bottom: 1rem;
+    }
+
+    .contact-card h3 {
+      font-size: 1.3rem;
+      margin-bottom: 1rem;
+      color: #2d3748;
+    }
+
+    .contact-card p {
+      color: #718096;
+      line-height: 1.8;
+    }
+
+    .contact-card a {
+      color: #521212;
+      text-decoration: none;
+      font-weight: 500;
+    }
+
+    /* Footer */
+    footer {
+      background: #551818;
+      color: white;
+      text-align: center;
+      padding: 3rem 5%;
+    }
+
+    .footer-content {
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+
+    .footer-logo {
+      font-size: 1.8rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
+      background:linear-gradient(135deg, #f1e77a 0%, #db7257 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .footer-links {
+      display: flex;
+      justify-content: center;
+      gap: 2rem;
+      margin: 2rem 0;
+      flex-wrap: wrap;
+    }
+
+    .footer-links a {
+      color: #eef1f5;
+      text-decoration: none;
+      transition: color 0.3s;
+    }
+
+    .footer-links a:hover {
+      color: white;
+    }
+
+    .footer-bottom {
+      border-top: 1px solid #62684a;
+      padding-top: 2rem;
+      margin-top: 2rem;
+      color: #c0a8a0;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .nav-links {
+        display: none;
+      }
+
+      .mobile-menu {
+        display: flex;
+      }
+
+      .hero h1 {
+        font-size: 2.5rem;
+      }
+
+      .hero p {
+        font-size: 1.2rem;
+      }
+
+      section {
+        padding: 4rem 5%;
+      }
+
+      .section-title {
+        font-size: 2rem;
+      }
+
+      .packages-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .booking-form {
+        padding: 2rem;
+      }
+
+      .form-grid {
+        grid-template-columns: 1fr;
+
+      }
+    }
+
+    .no-results {
+      text-align: center;
+      padding: 3rem;
+      color: #718096;
+      font-size: 1.1rem;
+    }
+
+    /* Gallery Section */
+    .gallery-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 20px;
+      padding: 20px;
+    }
+
+    .gallery-item {
+      position: relative;
+      overflow:visible;
+      border-radius: 15px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+      transition: transform 0.3s, box-shadow 0.3s;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      /* keep consistent item shapes across the grid */
+      aspect-ratio: 4 / 3;
+      min-height: 180px;
+    }
+
+    .gallery-item:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+    }
+
+    .gallery-item img {
+      display: block;
+      width: 100%;
+      height: 250px;
+      object-fit: cover;
+      object-position: auto;
+      transition: transform 0.3s;
+      display: block;
+      border-radius: 12px;
+      gap: 20 px;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .gallery-item:hover img {
+      transform: scale(1.05);
+    }
+
+    .gallery-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.6);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      transition: opacity 0.3s;
+      gap: 20px;
+    }
+
+    .gallery-item:hover .gallery-overlay {
+      opacity: 1;
+    }
+
+    .gallery-overlay-text {
+      color: white;
+      font-size: 1.2rem;
+      font-weight: 600;
+      text-align: center;
+    }
+    @media (max-width: 420px) {
+      .gallery-item { aspect-ratio: 3 / 2; }
+    }
+  </style>
+  <style>@view-transition { navigation: auto; }</style>
+  <script src="https://cdn.tailwindcss.com" type="text/javascript"></script>
+ </head>
+ <body>
+  <nav>
+   <div class="logo" id="nav-logo">
+    Eventora Events
+   </div>
+   <ul class="nav-links">
+    <li><a onclick="scrollToSection('home')">Home</a></li>
+    <li><a onclick="scrollToSection('about')">About</a></li>
+    <li><a onclick="scrollToSection('services')">Services</a></li>
+    <li><a onclick="scrollToSection('packages')">Packages</a></li>
+    <li><a onclick="scrollToSection('gallery')">Gallery</a></li>
+    <li><a onclick="scrollToSection('booking')">Booking</a></li>
+    <li><a onclick="scrollToSection('contact')">Contact</a></li>
+   </ul>
+   <div class="mobile-menu"><span></span> <span></span> <span></span>
+   </div>
+  </nav>
+  <section id="home" class="hero">
+   <div class="hero-content">
+    <h1 id="hero-title">Eventora Events</h1>
+    <p id="hero-tagline">Where Moments Become Memories</p><button class="cta-button" id="cta-button" onclick="scrollToSection('booking')">Start Planning Your Event</button>
+   </div>
+  </section>
+  <section id="about">
+   <h2 class="section-title" id="about-title">About Eventora Events</h2>
+   <p class="section-subtitle" id="mission-text">We craft extraordinary experiences that transform your vision into unforgettable celebrations</p>
+   <div class="about-grid">
+    <div class="about-card">
+     <h3>🎯 Our Mission</h3>
+     <p>To create seamless, extraordinary events that exceed expectations and leave lasting impressions. Every detail matters, every moment counts.</p>
+    </div>
+    <div class="about-card">
+     <h3>💎 Our Values</h3>
+     <p>Excellence, creativity, and authenticity drive everything we do. We believe in personalized service and meticulous attention to detail.</p>
+    </div>
+    <div class="about-card">
+     <h3>⭐ Our Experience</h3>
+     <p>With over a decade of experience and 500+ successful events, we bring expertise, innovation, and passion to every celebration.</p>
+    </div>
+   </div>
+  </section>
+  <section id="services">
+   <h2 style="color:rgb(255, 189, 189)" class="section-title">Our Services</h2>
+   <p style="color:rgb(188, 181, 181)" class="section-subtitle">Comprehensive event solutions tailored to your unique needs</p>
+   <div class="services-grid">
+    <div class="service-card">
+     <div class="service-icon">
+      🎂
+     </div>
+     <h3 style="font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif"><b>Birthday Planning</b></h3>
+     <p style="color:rgb(109, 107, 7)"><i>From intimate gatherings to grand celebrations, we create birthday experiences that capture the essence of your special day.</i></p>
+    </div>
+    <div class="service-card">
+     <div class="service-icon">
+      💍
+     </div>
+     <h3 style="font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif"><b>Weddings</b></h3>
+     <p style="color:rgb(179, 138, 104)"><i>Turn your dream wedding into reality with our comprehensive planning, design, and coordination services.</i></p>
+    </div>
+    <div class="service-card">
+     <div class="service-icon">
+      🏔️
+     </div>
+     <h3 style="font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif"><b>Adventure Trips</b></h3>
+     <p style="color:rgb(109, 107, 7)"><i>Curated adventure experiences that blend excitement with comfort, perfect for team building and personal milestones.</i></p>
+    </div>
+    <div class="service-card">
+     <div class="service-icon">
+      💼
+     </div>
+     <h3 style="font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif"><b>Corporate Events</b></h3>
+     <p style="color:rgb(179, 138, 104)"><i>Professional event management for conferences, product launches, seminars, and corporate celebrations.</i></p>
+    </div>
+    <div class="service-card">
+     <div class="service-icon">
+      🎪
+     </div>
+     <h3 style="font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif"><b>Other Events</b></h3>
+     <p style="color:rgb(109, 107, 7)"><i>Anniversaries, reunions, festivals, and any celebration you can imagine - we bring your vision to life.</i></p>
+    </div>
+   </div>
+  </section>
+  <section id="packages">
+   <h2 class="section-title">Featured Packages</h2>
+   <p class="section-subtitle">Carefully curated experiences designed to create lasting memories</p>
+   <div class="filter-container">
+    <div class="filter-grid">
+     <div class="filter-group"><label for="filter-state">State</label> <select id="filter-state"> <option value="">All States</option> <option value="Rajasthan">Rajasthan</option> <option value="Maharashtra">Maharashtra</option> <option value="Karnataka">Karnataka</option> <option value="Gujarat">Gujarat</option> <option value="Telangana">Telangana</option> <option value="Himachal Pradesh">Himachal Pradesh</option> </select>
+     </div>
+     <div class="filter-group"><label for="filter-city">City</label> <select id="filter-city"> <option value="">All Cities</option> </select>
+     </div>
+     <div class="filter-group"><label for="filter-type">Event Type</label> <select id="filter-type"> <option value="">All Types</option> <option value="Birthday">Birthday</option> <option value="Wedding">Wedding</option> <option value="Adventure">Adventure</option> <option value="Corporate">Corporate</option> <option value="Other">Other</option> </select>
+     </div>
+     <div  class="filter-group"><label for="filter-budget">Max Budget ($)</label> <input type="number" id="filter-budget" placeholder="e.g., 15000" min="0">
+     </div>
+     <div class="filter-group"><label for="filter-days">Max Days</label> <input type="number" id="filter-days" placeholder="e.g., 3" min="1">
+     </div>
+    </div>
+    <div class="filter-actions"><button class="btn btn-primary" onclick="applyFilters()">Apply Filters</button> <button class="btn btn-secondary" onclick="resetFilters()">Reset</button>
+    </div>
+   </div>
+   <div class="packages-grid" id="packages-grid"></div>
+  </section>
+  <section id="gallery">
+   <h2 class="section-title">Event Gallery</h2>
+   <p class="section-subtitle">Glimpses of our memorable events and celebrations</p>
+   <div class="gallery-grid">
+    <div class="gallery-item">
+     <img src="/images/pexels-marina-ribeiro-decoracoes-1081262752-20609919.jpg" alt="Event Gallery 1">
+     <div class="gallery-overlay">
+      <div class="gallery-overlay-text">Elegant Decorations</div>
+     </div>
+    </div>
+    <div class="gallery-item">
+     <img src="/images/pexels-sandesh-pandey-549214633-16681482.jpg" alt="Event Gallery 2">
+     <div class="gallery-overlay">
+      <div class="gallery-overlay-text">Beautiful Moments</div>
+     </div>
+    </div>
+    <div class="gallery-item">
+     <img src="/images/pexels-thevisionaryvows-33417234.jpg" alt="Event Gallery 3">
+     <div class="gallery-overlay">
+      <div class="gallery-overlay-text">Special Celebrations</div>
+     </div>
+    </div>
+   </div>
+  </section>
+  <section id="booking">
+   <h2 class="section-title" style="color:white">Book Your Event</h2>
+   <p class="section-subtitle" style="color:peachpuff">Let's start planning your perfect celebration together</p>
+   <form class="booking-form" id="booking-form" onsubmit="handleBookingSubmit(event)">
+    <div id="success-container"></div>
+    <div class="form-grid">
+     <div class="form-group"><label for="booking-name">Full Name *</label> <input type="text" id="booking-name" required>
+     </div>
+     <div class="form-group"><label for="booking-email">Email Address *</label> <input type="email" id="booking-email" required>
+     </div>
+     <div class="form-group"><label for="booking-phone">Phone Number *</label> <input type="tel" id="booking-phone" required>
+     </div>
+     <div class="form-group"><label for="booking-guests">Number of Guests *</label> <input type="number" id="booking-guests" min="1" required>
+     </div>
+     <div class="form-group full-width"><label for="booking-date">Event Date *</label> <input type="date" id="booking-date" required>
+     </div>
+     <div class="form-group full-width"><label for="booking-notes">Additional Notes</label> <textarea id="booking-notes" placeholder="Tell us about your event vision, special requirements, or any questions you have..."></textarea>
+     </div>
+    </div><button type="submit" class="form-submit" id="submit-btn">Submit Booking Request</button>
+   </form>
+  </section>
+  <section id="contact">
+   <h2 class="section-title">Get In Touch</h2>
+   <p class="section-subtitle">We're here to answer your questions and bring your event vision to life</p>
+   <div class="contact-grid">
+    <div class="contact-card">
+     <div class="contact-icon">
+      📍
+     </div>
+     <h3>Our Office</h3>
+     <p>41 42 Gita building<br>
+      Ankleshwar <br>
+      Gujarat, India 393001</p>
+    </div>
+    <div class="contact-card">
+     <div class="contact-icon">
+      📞
+     </div>
+     <h3>Phone</h3>
+     <p><a href="tel:+919876543210">+91 98765 43210</a><br>
+      Mon-Fri: 9AM - 6PM IST</p>
+    </div>
+    <div class="contact-card">
+     <div class="contact-icon">
+      ✉️
+     </div>
+     <h3>Email</h3>
+     <p><a href="mailto:krishna.71906@gmail.com">krishna2102dv.com</a><br>
+      We respond within 24 hours</p>
+    </div>
+   </div>
+  </section>
+  
+  <!-- Modal Popup -->
+  <div class="modal-overlay" id="modal-overlay">
+    <div class="modal-content" id="modal-content">
+      <div class="modal-icon" id="modal-icon"></div>
+      <div class="modal-title" id="modal-title"></div>
+      <div class="modal-message" id="modal-message"></div>
+      <button class="modal-button" onclick="closeModal()">Close</button>
+    </div>
+  </div>
+
+  <footer>
+   <div class="footer-content">
+    <div class="footer-logo" id="footer-logo">
+     Eventora Events
+    </div>
+    <div class="footer-links"><a onclick="scrollToSection('home')">Home</a> <a onclick="scrollToSection('about')">About</a> <a onclick="scrollToSection('services')">Services</a> <a onclick="scrollToSection('packages')">Packages</a> <a onclick="scrollToSection('gallery')">Gallery</a> <a onclick="scrollToSection('booking')">Booking</a> <a onclick="scrollToSection('contact')">Contact</a>
+    </div>
+    <div class="footer-bottom">
+     <p id="footer-text">© 2024 Eventora Events. All rights reserved.</p>
+    </div>
+   </div>
+  </footer>
+  <script>
+    const defaultConfig = {
+      agency_name: "Eventora Events",
+      tagline: "Where Moments Become Memories",
+      cta_text: "Start Planning Your Event",
+      about_title: "About Eventora Events",
+      mission_text: "We craft extraordinary experiences that transform your vision into unforgettable celebrations",
+      footer_text: "© 2024 Eventora Events. All rights reserved.",
+      background_color: "#F9F7F7",
+      primary_color: "#A6D0DD",
+      secondary_color: "#FFBFA9",
+      text_color: "#2F2F2F",
+      card_background: "#FFFFFF",
+      font_family: "Inter",
+      font_size: 16
+    };
+
+    const packages = [
+      {
+        id: "1",
+        title: "Royal Wedding Extravaganza",
+        state: "Rajasthan",
+        city: "Udaipur",
+        type: "Wedding",
+        days: 3,
+        price: 1800000,
+        description: "A premium destination wedding hosted in a heritage palace property, complete with traditional Rajasthani hospitality, royal décor, and a cinematic wedding experience.",
+        highlights: ["Heritage palace venue", "Traditional mehendi + sangeet setup", "Live folk music & dance", "Premium buffet (veg/non-veg options)", " Bridal makeup & grooming"," Professional photography & videography"]
+      },
+      {
+        id: "2",
+        title: "Corporate Conclave Pro",
+        state: "Mumbai",
+        city: "Maharashtra",
+        type: "Corporate",
+        days: 1,
+        price: 320000,
+        description: "A professional corporate event package for product launches, seminars, networking, or team meets in a premium business hotel.",
+        highlights: ["5-star coference hall", "stage, LED screen & sound setup", "High-speed Wi-Fi", "Tea/Coffee + snakes + lunch buffet", "Technical team support","Event host/ presenter"]
+      },
+      {
+        id: "3",
+        title: "Elite Birthday Bash",
+        state: "Bengaluru",
+        city: "karnataka",
+        type: "Birthday",
+        days: 1,
+        price: 110000,
+        description: "An elegant indoor/outdoor birthday event perfect for adults or kids with premium décor, entertainment, and catering.",
+        highlights: ["Themed decor & backdrop", "Ballon styling + lighting", "Customized cake (2-3tier)", "Live music OR magician show", "Snakes + dinner buffet","Photography coverage(2 hours)"]
+      },
+      {
+        id: "4",
+        title: "Traditional Engagement Ceremony",
+        state: "Ahmedabad",
+        city: "Gujarat",
+        type: "Engagement",
+        days: 1,
+        price: 240000,
+        description: "A culturally rich engagement event with elegant décor, rituals, and complete arrangement for a smooth ceremony.",
+        highlights: ["Stage decor + floral backdrop", "Seating arrangements", "Sounds system + LED screens", "Veg buffet(gujarati/north indian)", "Professional photography and videography","Ring ceremony management"]
+      },
+      {
+        id: "5",
+        title: "College Fest Pro Package",
+        state: "Pune",
+        city: "Maharashtra",
+        type: "Collage Event",
+        days: 1,
+        price: 200000,
+        description: "A fully managed college fest setup with stage lights, sound, anchors, and coordination.",
+        highlights: ["Big stage setup", "DJ + sound system", "Lighting effects", "Emcee/host", "Security + crowd management", "branding banners"]
+      },
+      {
+        id: "6",
+        title: "Baby Shower Celebration",
+        state: "Hyderabad",
+        city: "Telangana",
+        type: "Other",
+        days: 1,
+        price: 82000,
+        description: "A beautiful and memorable ceremony with pastel décor, cake, and games.",
+        highlights: ["Theme-based decor", "Ballons arch + backdrop", "Cake & desserts", "Games & anchor", "photography coverage", "Gift hampers for guests"]
+      },
+      {
+        id: "7",
+        title: "Himalayan Trek Escape",
+        state: "Manali",
+        city: "Himachal Pradesh",
+        type: "Adventure",
+        days: 5,
+        price: 28000,
+        description: "A high-altitude trekking experience through rugged Himalayan trails, pine forests, and scenic campsites.",
+        highlights: ["Guided mountain trek ", "Tent stay with Bonfire nights", "Meals and energy packs", "Basic firt-aid kit & trek support", "Transport to and from basecamp", "Photography of the trek"]
+      },
+      {
+        id: "8",
+        title: "Corporate Package – Leadership Offsite",
+        state: "Goa",
+        type: "Corporate",
+        days: 3,
+        price: 280000,
+        description: "Designed for companies wanting a serious but relaxing offsite environment.",
+        highlights: ["Beachside luxury stay", "Gala dinner", "Strategy workshops", "Group activities (boat curise, beach games)", "Transportation included"]
+      },
+      {
+        id: "9",
+        title: "Desert Safari Thrill Ride",
+        state: "Jaisalmer",
+        city: "Rajasthan",
+        type: "Adventure",
+        days: 2,
+        price: 18500,
+        description: "A desert adventure with dune bashing, camel rides, and a traditional Rajasthani cultural night.",
+        highlights: ["jeep dune bashing", "Camel ride", "Desert tent stay", "Sunrise Photography", "Live folk performance", "Traditional Rajasthani dinner"]
+      },
+    ];
+
+    const cityMap = {
+      "Rajasthan": ["Udaipur", "Jaisalmer"],
+      "Maharashtra": ["Mumbai", "Pune"],
+      "Karnataka": ["Bengaluru"],
+      "Gujarat": ["Ahmedabad", "Ankleshwar"],
+      "Telangana": ["Hyderabad"],
+      "Himachal Pradesh": ["Manali"]
+    };
+
+    let currentRecordCount = 0;
+    let allPackages = packages;
+    let filteredPackages = packages;
+
+    const dataHandler = {
+      onDataChanged(data) {
+        currentRecordCount = data.length;
+      }
+    };
+
+    async function onConfigChange(config) {
+      const agencyName = config.agency_name || defaultConfig.agency_name;
+      const tagline = config.tagline || defaultConfig.tagline;
+      const ctaText = config.cta_text || defaultConfig.cta_text;
+      const aboutTitle = config.about_title || defaultConfig.about_title;
+      const missionText = config.mission_text || defaultConfig.mission_text;
+      const footerText = config.footer_text || defaultConfig.footer_text;
+      
+      const backgroundColor = config.background_color || defaultConfig.background_color;
+      const primaryColor = config.primary_color || defaultConfig.primary_color;
+      const secondaryColor = config.secondary_color || defaultConfig.secondary_color;
+      const textColor = config.text_color || defaultConfig.text_color;
+      const cardBackground = config.card_background || defaultConfig.card_background;
+      
+      const customFont = config.font_family || defaultConfig.font_family;
+      const baseFontStack = '-apple-system, BlinkMacSystemFont, Segoe UI, sans-serif';
+      const fontFamily = `${customFont}, ${baseFontStack}`;
+      
+      const baseSize = config.font_size || defaultConfig.font_size;
+
+      document.body.style.fontFamily = fontFamily;
+      document.body.style.background = backgroundColor;
+      document.body.style.color = textColor;
+      document.body.style.fontSize = `${baseSize}px`;
+
+      document.getElementById('nav-logo').textContent = agencyName;
+      document.getElementById('hero-title').textContent = agencyName;
+      document.getElementById('hero-title').style.fontSize = `${baseSize * 2.5}px`;
+      document.getElementById('hero-tagline').textContent = tagline;
+      document.getElementById('hero-tagline').style.fontSize = `${baseSize * 1.5}px`;
+      document.getElementById('cta-button').textContent = ctaText;
+      document.getElementById('about-title').textContent = aboutTitle;
+      document.getElementById('about-title').style.fontSize = `${baseSize * 1.75}px`;
+      document.getElementById('mission-text').textContent = missionText;
+      document.getElementById('mission-text').style.fontSize = `${baseSize * 1.2}px`;
+      document.getElementById('footer-logo').textContent = agencyName;
+      document.getElementById('footer-text').textContent = footerText;
+
+      const heroSection = document.querySelector('.hero');
+      heroSection.style.background = `linear-gradient(135deg, ${primaryColor} 0%, ${secondaryColor} 100%)`;
+
+      const cards = document.querySelectorAll('.about-card, .service-card, .package-card, .contact-card, .booking-form, .filter-container');
+      cards.forEach(card => {
+        card.style.background = cardBackground;
+      });
+
+      const sectionTitles = document.querySelectorAll('.section-title');
+      sectionTitles.forEach(title => {
+        title.style.fontSize = `${baseSize * 1.75}px`;
+      });
+    }
+
+    async function initializeSdk() {
+      if (window.dataSdk) {
+        const result = await window.dataSdk.init(dataHandler);
+        if (!result.isOk) {
+          console.error("Failed to initialize Data SDK");
+        }
+      }
+
+      if (window.elementSdk) {
+        window.elementSdk.init({
+          defaultConfig,
+          onConfigChange,
+          mapToCapabilities: (config) => ({
+            recolorables: [
+              {
+                get: () => config.background_color || defaultConfig.background_color,
+                set: (value) => {
+                  config.background_color = value;
+                  window.elementSdk.setConfig({ background_color: value });
+                }
+              },
+              {
+                get: () => config.card_background || defaultConfig.card_background,
+                set: (value) => {
+                  config.card_background = value;
+                  window.elementSdk.setConfig({ card_background: value });
+                }
+              },
+              {
+                get: () => config.text_color || defaultConfig.text_color,
+                set: (value) => {
+                  config.text_color = value;
+                  window.elementSdk.setConfig({ text_color: value });
+                }
+              },
+              {
+                get: () => config.primary_color || defaultConfig.primary_color,
+                set: (value) => {
+                  config.primary_color = value;
+                  window.elementSdk.setConfig({ primary_color: value });
+                }
+              },
+              {
+                get: () => config.secondary_color || defaultConfig.secondary_color,
+                set: (value) => {
+                  config.secondary_color = value;
+                  window.elementSdk.setConfig({ secondary_color: value });
+                }
+              }
+            ],
+            borderables: [],
+            fontEditable: {
+              get: () => config.font_family || defaultConfig.font_family,
+              set: (value) => {
+                config.font_family = value;
+                window.elementSdk.setConfig({ font_family: value });
+              }
+            },
+            fontSizeable: {
+              get: () => config.font_size || defaultConfig.font_size,
+              set: (value) => {
+                config.font_size = value;
+                window.elementSdk.setConfig({ font_size: value });
+              }
+            }
+          }),
+          mapToEditPanelValues: (config) => new Map([
+            ["agency_name", config.agency_name || defaultConfig.agency_name],
+            ["tagline", config.tagline || defaultConfig.tagline],
+            ["cta_text", config.cta_text || defaultConfig.cta_text],
+            ["about_title", config.about_title || defaultConfig.about_title],
+            ["mission_text", config.mission_text || defaultConfig.mission_text],
+            ["footer_text", config.footer_text || defaultConfig.footer_text]
+          ])
+        });
+      }
+    }
+
+    function renderPackages(packagesToRender) {
+      const grid = document.getElementById('packages-grid');
+      
+      if (packagesToRender.length === 0) {
+        grid.innerHTML = '<div class="no-results">No packages match your search criteria. Try adjusting your filters.</div>';
+        return;
+      }
+
+      grid.innerHTML = packagesToRender.map(pkg => `
+        <div class="package-card">
+          <div class="package-header">
+            <h3>${pkg.title}</h3>
+            <div class="package-location">📍 ${pkg.city}, ${pkg.state}</div>
+          </div>
+          <div class="package-body">
+            <div class="package-meta">
+              <div class="meta-item">🎯 ${pkg.type}</div>
+              <div class="meta-item">📅 ${pkg.days} ${pkg.days === 1 ? 'Day' : 'Days'}</div>
+            </div>
+            <div class="package-price">₹${pkg.price.toLocaleString()}</div>
+            <p class="package-description">${pkg.description}</p>
+            <div class="package-highlights">
+              <h4>Highlights:</h4>
+              <ul class="highlight-list">
+                ${pkg.highlights.map(h => `<li>${h}</li>`).join('')}
+              </ul>
+            </div>
+            <div style="display: flex; gap: 0.8rem; margin-top: 1.5rem;">
+              <button class="btn-book" onclick="scrollToSection('booking')" style="flex: 1;">Book This Package</button>
+              <button class="btn-book" onclick="downloadPackagePDF('${pkg.id}')" style="flex: 1; background: linear-gradient(135deg, #8b6914 0%, #5a4a1f 100%);">📥 Download PDF</button>
+            </div>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function updateCityDropdown() {
+      const stateSelect = document.getElementById('filter-state');
+      const citySelect = document.getElementById('filter-city');
+      const selectedState = stateSelect.value;
+
+      citySelect.innerHTML = '<option value="">All Cities</option>';
+
+      if (selectedState && cityMap[selectedState]) {
+        cityMap[selectedState].forEach(city => {
+          const option = document.createElement('option');
+          option.value = city;
+          option.textContent = city;
+          citySelect.appendChild(option);
+        });
+      }
+    }
+
+    function applyFilters() {
+      const state = document.getElementById('filter-state').value;
+      const city = document.getElementById('filter-city').value;
+      const type = document.getElementById('filter-type').value;
+      const budget = document.getElementById('filter-budget').value;
+      const days = document.getElementById('filter-days').value;
+
+      filteredPackages = allPackages.filter(pkg => {
+        if (state && pkg.state !== state) return false;
+        if (city && pkg.city !== city) return false;
+        if (type && pkg.type !== type) return false;
+        if (budget && pkg.price > parseInt(budget)) return false;
+        if (days && pkg.days > parseInt(days)) return false;
+        return true;
+      });
+
+      renderPackages(filteredPackages);
+    }
+
+    function resetFilters() {
+      document.getElementById('filter-state').value = '';
+      document.getElementById('filter-city').value = '';
+      document.getElementById('filter-type').value = '';
+      document.getElementById('filter-budget').value = '';
+      document.getElementById('filter-days').value = '';
+      
+      updateCityDropdown();
+      filteredPackages = allPackages;
+      renderPackages(filteredPackages);
+    }
+
+    async function handleBookingSubmit(event) {
+      event.preventDefault();
+
+      if (currentRecordCount >= 999) {
+        showModal('error', 'Booking Limit Reached', 'Maximum limit of 999 bookings reached. Please contact us directly.');
+        return;
+      }
+
+      const submitBtn = document.getElementById('submit-btn');
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'Submitting...';
+
+      const bookingData = {
+        id: Date.now().toString(),
+        name: document.getElementById('booking-name').value,
+        email: document.getElementById('booking-email').value,
+        phone: document.getElementById('booking-phone').value,
+        guests: parseInt(document.getElementById('booking-guests').value),
+        date: document.getElementById('booking-date').value,
+        notes: document.getElementById('booking-notes').value,
+        createdAt: new Date().toISOString()
+      };
+
+      // If a remote data SDK is available, use it. Otherwise fall back to a local save
+      if (window.dataSdk) {
+        try {
+          const result = await window.dataSdk.create(bookingData);
+
+          submitBtn.disabled = false;
+          submitBtn.textContent = 'Submit Booking Request';
+
+          if (result.isOk) {
+            showModal('success', 'Booking Confirmed!', 'Thank you! Your booking request has been received. We will contact you within 24 hours.');
+            document.getElementById('booking-form').reset();
+          } else {
+            showModal('error', 'Submission Failed', 'Failed to submit booking. Please try again.');
+          }
+        } catch (err) {
+          submitBtn.disabled = false;
+          submitBtn.textContent = 'Submit Booking Request';
+          showModal('error', 'Error', 'An error occurred while submitting. Please try again.');
+          console.error('dataSdk.create error', err);
+        }
+      } else {
+        // Local fallback: save booking to localStorage and show success message
+        try {
+          const storageKey = 'localBookings';
+          const existing = JSON.parse(localStorage.getItem(storageKey) || '[]');
+          existing.push(bookingData);
+          localStorage.setItem(storageKey, JSON.stringify(existing));
+
+          submitBtn.disabled = false;
+          submitBtn.textContent = 'Submit Booking Request';
+          showModal('success', 'Booking Saved!', 'Your booking request has been saved successfully. It will be sent when connected to our backend.');
+          document.getElementById('booking-form').reset();
+          console.log('Booking saved locally:', bookingData);
+        } catch (err) {
+          submitBtn.disabled = false;
+          submitBtn.textContent = 'Submit Booking Request';
+          showModal('error', 'Save Failed', 'Failed to save booking locally. Please try again.');
+          console.error('local save error', err);
+        }
+      }
+    }
+
+    function showModal(type, title, message) {
+      const overlay = document.getElementById('modal-overlay');
+      const content = document.getElementById('modal-content');
+      const icon = document.getElementById('modal-icon');
+      const titleEl = document.getElementById('modal-title');
+      const messageEl = document.getElementById('modal-message');
+
+      if (type === 'success') {
+        icon.textContent = '✓';
+        icon.style.color = '#48bb78';
+        content.classList.remove('error');
+        content.classList.add('success');
+      } else if (type === 'error') {
+        icon.textContent = '✕';
+        icon.style.color = '#f56565';
+        content.classList.remove('success');
+        content.classList.add('error');
+      }
+
+      titleEl.textContent = title;
+      messageEl.textContent = message;
+      overlay.classList.add('show');
+    }
+
+    function closeModal() {
+      const overlay = document.getElementById('modal-overlay');
+      overlay.classList.remove('show');
+    }
+
+    function downloadPackagePDF(packageId) {
+      const pkg = allPackages.find(p => p.id === packageId);
+      if (!pkg) {
+        alert('Package not found');
+        return;
+      }
+
+      const { jsPDF } = window.jspdf;
+      const doc = new jsPDF();
+      
+      const pageWidth = doc.internal.pageSize.getWidth();
+      const pageHeight = doc.internal.pageSize.getHeight();
+      const margin = 15;
+      let yPosition = margin;
+      
+      // Title
+      doc.setFont('Helvetica', 'bold');
+      doc.setFontSize(24);
+      doc.text('Eventora Events', margin, yPosition);
+      yPosition += 10;
+      
+      // Package Title
+      doc.setFontSize(18);
+      doc.text(pkg.title, margin, yPosition);
+      yPosition += 8;
+      
+      // Location
+      doc.setFontSize(12);
+      doc.setFont('Helvetica', 'normal');
+      doc.text(`Location: ${pkg.city}, ${pkg.state}`, margin, yPosition);
+      yPosition += 6;
+      
+      // Type and Duration
+      doc.text(`Event Type: ${pkg.type} | Duration: ${pkg.days} ${pkg.days === 1 ? 'Day' : 'Days'}`, margin, yPosition);
+      yPosition += 8;
+      
+      // Price
+      doc.setFont('Helvetica', 'bold');
+      doc.setFontSize(14);
+      doc.text(`Price: Rs. ${pkg.price.toLocaleString()}`, margin, yPosition);
+      yPosition += 8;
+      
+      // Separator line
+      doc.setDrawColor(150, 100, 50);
+      doc.line(margin, yPosition, pageWidth - margin, yPosition);
+      yPosition += 6;
+      
+      // Description
+      doc.setFont('Helvetica', 'normal');
+      doc.setFontSize(11);
+      const descriptionLines = doc.splitTextToSize(pkg.description, pageWidth - 2 * margin);
+      doc.text('Description:', margin, yPosition);
+      yPosition += 5;
+      doc.text(descriptionLines, margin, yPosition);
+      yPosition += descriptionLines.length * 4 + 3;
+      
+      // Highlights
+      doc.setFont('Helvetica', 'bold');
+      doc.setFontSize(12);
+      doc.text('Package Highlights:', margin, yPosition);
+      yPosition += 6;
+      
+      doc.setFont('Helvetica', 'normal');
+      doc.setFontSize(10);
+      pkg.highlights.forEach(highlight => {
+        const highlightLines = doc.splitTextToSize(`• ${highlight}`, pageWidth - 2 * margin - 5);
+        doc.text(highlightLines, margin + 5, yPosition);
+        yPosition += highlightLines.length * 4 + 2;
+        
+        if (yPosition > pageHeight - margin) {
+          doc.addPage();
+          yPosition = margin;
+        }
+      });
+      
+      // Footer
+      yPosition = pageHeight - 15;
+      doc.setFont('Helvetica', 'italic');
+      doc.setFontSize(9);
+      doc.setTextColor(120, 120, 120);
+      doc.text('For more information or to book, visit our website or contact us directly.', margin, yPosition);
+      doc.text(`Generated on ${new Date().toLocaleDateString()}`, margin, yPosition + 5);
+      
+      // Save PDF
+      doc.save(`${pkg.title.replace(/\s+/g, '_')}_Package.pdf`);
+    }
+
+    // Create an <img>-based hero slider (reliable on Android)
+    function createHeroImageSlider(images, interval = 5000) {
+      // Slider disabled - using gradient instead
+      console.log('Image slider disabled, using linear gradient');
+    }
+
+    function scrollToSection(sectionId) {
+      const section = document.getElementById(sectionId);
+      if (section) {
+        const navHeight = 80;
+        const sectionTop = section.offsetTop - navHeight;
+        window.scrollTo({ top: sectionTop, behavior: 'smooth' });
+      }
+    }
+
+    document.getElementById('filter-state').addEventListener('change', updateCityDropdown);
+
+    initializeSdk();
+    renderPackages(allPackages);
+    // Start image slider for reliability on mobile
+    createHeroImageSlider([
+      'pexels-marina-ribeiro-decoracoes-1081262752-20609919.jpg',
+      'pexels-sandesh-pandey-549214633-16681482.jpg',
+      'pexels-thevisionaryvows-33417234.jpg',
+      'pexels-mographe-11294565.jpg',
+      '44a488a5d5bf88b97b7a7d316abc57a9.jpg'
+    ]);
+  </script>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9a182f0715e08b0b',t:'MTc2MzY0NDE4Ny4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
